@@ -69,6 +69,5 @@ python3 GHC.py
 
 ---
 
-Output in .md format
 
 Note: The above information is provided for the Global Health Committee's database and the operations it supports. Ensure you follow the prerequisites and execute the given code responsibly.
