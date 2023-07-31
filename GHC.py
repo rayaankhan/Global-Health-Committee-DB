@@ -447,84 +447,90 @@ def dispatch(ch):
     else:
         print("Error: Invalid Option")
 
+def connect_to_database(username, password):
+    db_host = 'localhost'
+    db_name = 'GHC'
+
+    try:
+        con = pymysql.connect(
+            host=db_host,
+            user=username,
+            password=password,
+            db=db_name,
+        )
+        # Return the connection object or perform any required database operations
+        return con
+    except pymysql.Error as e:
+        # Handle any connection errors
+        print(f"Database connection error: {e}")
+        return None
+
 # Global
 tmp = sp.call('clear', shell=True)
 while(1):
 
-    # Can be skipped if you want to hardcode username and password
-    # username = input("Username: ")
-    # password = input("Password: ")
-
-    # Set db name accordingly which have been create by you
-    # Set host to the server's address if you don't want to use local SQL server
     username = input("Username: ")
-    password = maskpass.askpass(mask="*") 
-    if (((username.lower() == "root") and (password == "12345678"))or True):
-        con = pymysql.connect(
-            host='localhost',
-            user=username,
-            password=password,
-            db='GHC',
-        )
-        tmp = sp.call('clear', shell=True)
-
-        if con.open:
-            print("Connected")
+    password = maskpass.askpass(mask="*")
+    con = connect_to_database(username, password)
+    while(1):
+        # while credentials are wrong
+        if(con == None):
+            input("Enter any key to CONTINUE>")
+            tmp = sp.call('clear', shell=True)
+            username = input("Username: ")
+            password = maskpass.askpass(mask="*") 
+            con = connect_to_database(username, password)
         else:
-            print("Failed to connect")
+            break
+    tmp = sp.call('clear', shell=True)
+    tmp = input("Enter any key to CONTINUE>")
 
-        tmp = input("Enter any key to CONTINUE>")
+    with con.cursor() as cur:
+        while(1):
+            tmp = sp.call('clear', shell=True)
 
-        with con.cursor() as cur:
-            while(1):
-                tmp = sp.call('clear', shell=True)
+            # 1. Queries
+            # 1.1 Selection
+            print("1. Retrieving data of all the diseases")
+            print("2. Retrieving entire data about world health's stats")
+            print("3. Retrieving data of all the offices with their data")
+            # 1.2 Aggregate
+            print("4. Finding maximum duration among all the health policies with the name of the policy")
+            print("5. Finding sum of all the deaths caused by all the diseases")
+            print("6. Finding sum of all local organisations of all brannches")
+            # 1.3 Search
+            print("7. List of all the countries whose name starts with 'Ans'")
+            print("8. Number of all representatives with name ending with 'an'")
+            print("9. List of all diseases having 'ler' between their name")
+            # 1.4 Projection
+            print("10. List of all Bio-Medical researches with status of completion >= 90%")
+            print("11. List of all the branches in a particular country with more than 30 local organizations")
+            print("12. List of all Disease IDs with more than 60(integer) mortality rate")
+        
+            # 2. Analysis
+            print("13. R0 value of the disease with maximum number of recoveries")
+            print("14. Mortality rate of the country with minimum number of doctors/nurses")
 
-                # 1. Queries
-                # 1.1 Selection
-                print("1. Retrieving data of all the diseases")
-                print("2. Retrieving entire data about world health's stats")
-                print("3. Retrieving data of all the offices with their data")
-                # 1.2 Aggregate
-                print("4. Finding maximum duration among all the health policies with the name of the policy")
-                print("5. Finding sum of all the deaths caused by all the diseases")
-                print("6. Finding sum of all local organisations of all brannches")
-                # 1.3 Search
-                print("7. List of all the countries whose name starts with 'Ans'")
-                print("8. Number of all representatives with name ending with 'an'")
-                print("9. List of all diseases having 'ler' between their name")
-                # 1.4 Projection
-                print("10. List of all Bio-Medical researches with status of completion >= 90%")
-                print("11. List of all the branches in a particular country with more than 30 local organizations")
-                print("12. List of all Disease IDs with more than 60(integer) mortality rate")
-
-                # 2. Analysis
-                print("13. R0 value of the disease with maximum number of recoveries")
-                print("14. Mortality rate of the country with minimum number of doctors/nurses")
-
-                # 3. Modification
-                # 3.1 Insertion
-                print("15. Adding any new policy being deployed by some country")
-                print("16. Adding any new members who wants to join GHC")
-                print("17. Inserting any new disease being found")
-                print("18. Adding new branches and infrastructures formed.")
-                # 3.2 Update
-                print("19. Change in representative of any country")
-                print("20. Change in location of any branch")
-                print("21. Change in status of completion of any Bio-Medical research")
-                print("22. Updating the percentage of vaccination status of a disease")
-                # 3.3 Deletion
-                print("23. Deleting any policy after its expiry")
-                print("24. Removing any country who wants to leave GHC group")
-
-                print("25. Logout")
-                ch = int(input("Enter choice> "))
-                tmp = sp.call('clear', shell=True)
-                if ch == 25:
-                    exit()
-                else:
-                    dispatch(ch)
-                    tmp = input("Enter any key to CONTINUE>")
-
-    else:
-        print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
-        tmp = input("Enter any key to CONTINUE>")
+            # 3. Modification
+            # 3.1 Insertion
+            print("15. Adding any new policy being deployed by some country")
+            print("16. Adding any new members who wants to join GHC")
+            print("17. Inserting any new disease being found")
+            print("18. Adding new branches and infrastructures formed.")
+            # 3.2 Update
+            print("19. Change in representative of any country")
+            print("20. Change in location of any branch")
+            print("21. Change in status of completion of any Bio-Medical research")
+            print("22. Updating the percentage of vaccination status of a disease")
+            # 3.3 Deletion
+            print("23. Deleting any policy after its expiry")
+            print("24. Removing any country who wants to leave GHC group")
+        
+            print("25. Logout")
+            ch = int(input("Enter choice> "))
+            tmp = sp.call('clear', shell=True)
+            if ch == 25:
+                exit()
+            else:
+                dispatch(ch)
+                tmp = input("Enter any key to CONTINUE>")
