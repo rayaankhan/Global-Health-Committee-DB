@@ -4,6 +4,15 @@
 # Global Health Committee 
 # Database Designed to Manage the Operations in GHC 
 
+
+* Prerequisites: https://blog.rajnath.dev/mysql/ to install mysql in WSL.
+* Main code is to change the password back of mysql:
+*
+```
+  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+```
+* When you will be running my sql by the below code password is the one you have set on your mysql and that password is the one that will be used when you will run GHC.py and the username is root.
+
 ```
 mysql -u root -p
 ```
